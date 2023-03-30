@@ -45,23 +45,23 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDAO userDAO) {
         if(userDAO.getLogin() == null || userDAO.getEmail() == null || userDAO.getPassword() == null) {
-            return new ResponseEntity<>("Некорректные данные!", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new ErrorMessage("Некорректные данные!"));
         }
         if (userRepository.existsByLogin(userDAO.getLogin())) {
-            return new ResponseEntity<>("Пользователь с таким логином уже существует!", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new ErrorMessage("Пользователь с таким логином уже существует!"));
         }
         if (userRepository.existsByEmail(userDAO.getEmail())) {
-            return new ResponseEntity<>("Пользователь с такой почтой уже существует!", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new ErrorMessage("Пользователь с такой почтой уже существует!"));
         }
 
         String loginValidationError = Validation.validateLogin(userDAO.getLogin());
         if(loginValidationError != null) {
-            return new ResponseEntity<>(new ErrorMessage(loginValidationError), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new ErrorMessage(loginValidationError));
         }
 
         String passwordValidationError = Validation.validatePassword(userDAO.getPassword());
         if(passwordValidationError != null) {
-            return new ResponseEntity<>(new ErrorMessage(passwordValidationError), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new ErrorMessage(passwordValidationError));
         }
 
         User user = new User(null, userDAO.getLogin(), userDAO.getPassword(), userDAO.getEmail());
