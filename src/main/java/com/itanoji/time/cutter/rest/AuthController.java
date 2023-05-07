@@ -7,12 +7,10 @@ import com.itanoji.time.cutter.domain.JwtResponse;
 import com.itanoji.time.cutter.domain.UserDAO;
 import com.itanoji.time.cutter.model.User;
 import com.itanoji.time.cutter.repository.UserRepository;
-import com.itanoji.time.cutter.security.JwtTokenProvider;
 import com.itanoji.time.cutter.service.AuthService;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -64,7 +63,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new ErrorMessage(passwordValidationError));
         }
 
-        User user = new User(null, userDAO.getLogin(), userDAO.getPassword(), userDAO.getEmail());
+        User user = new User(null, userDAO.getLogin(), userDAO.getPassword(), userDAO.getEmail(), new ArrayList<>());
         user.setPassword(user.getPassword());
 
         User result = userRepository.save(user);
